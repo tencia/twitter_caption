@@ -47,13 +47,12 @@ def main(n_hid=256, lstm_layers=2, num_epochs=100,
 
     # compile training functions
     params = nn.layers.get_all_params(lstm['output'], trainable=True)
-    lr = theano.shared(nn.utils.floatX(1e-4))
+    lr = theano.shared(nn.utils.floatX(1e-3))
     updates = nn.updates.adam(loss, params, learning_rate=lr)
     train_fn = theano.function([conv_feats_var, seq_var], loss, updates=updates)
     test_fn = theano.function([conv_feats_var, seq_var], te_loss)
     predict_fn = theano.function([conv_feats_var, seq_var], T.exp(output_det[:,-1:]))
 
-    lr.set_value(3e-3)
     zeros = np.zeros((batch_size, 1, word_dim), dtype=theano.config.floatX)
     def transform_data(imb):
         y,x = imb
@@ -70,7 +69,7 @@ def main(n_hid=256, lstm_layers=2, num_epochs=100,
                       max_per_epoch=max_per_epoch,
                       tr_transform=transform_data,
                       te_transform=transform_data)
-
+    np.savetxt('cae_train_hist.csv', np.asarray(hist), delimiter=',', fmt='%.5f')
     u.save_params(lstm['output'], os.path.join(save_to,
         'lstm_{}.npz'.format(np.asarray(hist)[-1, -1])))
 

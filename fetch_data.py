@@ -104,7 +104,7 @@ def output_valid_data(lines):
                 if 'jpg' in m['media_url'].lower():
                     cap = caption(j1['text'])
                     if len(cap) > 0 and m['media_url'] not in valids:
-                        valids[m['media_url']] = ' '.join(cap[:10])
+                        valids[m['media_url']] = ' '.join(cap[:c.max_caption_len])
         with open(os.path.join(c.raw_dir, 'data_{}.csv'.format(np.random.randint(1000000))),
                 'w') as wr:
             wr.writelines(['{},{}\n'.format(u,cap) for u,cap in valids.iteritems()])
