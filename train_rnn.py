@@ -69,13 +69,13 @@ def main(n_hid=256, lstm_layers=2, num_epochs=100,
                       max_per_epoch=max_per_epoch,
                       tr_transform=transform_data,
                       te_transform=transform_data)
-    np.savetxt('cae_train_hist.csv', np.asarray(hist), delimiter=',', fmt='%.5f')
+    np.savetxt('lstm_train_hist.csv', np.asarray(hist), delimiter=',', fmt='%.5f')
     u.save_params(lstm['output'], os.path.join(save_to,
         'lstm_{}.npz'.format(np.asarray(hist)[-1, -1])))
 
 
     # generate some example captions for one batch of images
-    streamer = data.streamer(training=True)
+    streamer = data.streamer(training=False, shuffled=True)
     y_raw, x_raw = next(streamer.get_epoch_iterator())
     x, _ = transform_data((y_raw, x_raw))
 

@@ -12,7 +12,7 @@ import os
 import oauth2 as oauth
 import urllib2 as urllib
 
-from httplib import IncompleteRead
+from httplib import IncompleteRead, BadStatusLine
 
 words_set = set([l.strip() for l in open(c.words_20k_file, 'r').readlines()])
 exclude = set(string.punctuation + string.digits)
@@ -90,6 +90,8 @@ def fetchsamples(limit):
             if len(ret) >= limit:
               break
       except IncompleteRead:
+          pass
+      except BadStatusLine:
           pass
   return ret
 
